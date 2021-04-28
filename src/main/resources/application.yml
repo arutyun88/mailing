@@ -4,3 +4,16 @@ server:
 spring:
   main:
     banner-mode: off
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgresPlusDialect
+    show-sql: false
+    generate-ddl: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mailing_db
+    username: postgres
+    password: 1234
