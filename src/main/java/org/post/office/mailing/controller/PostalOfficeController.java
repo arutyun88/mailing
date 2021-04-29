@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-public class PostalController {
+public class PostalOfficeController {
     private final PostalOfficeServiceImpl service;
 
-    public PostalController(PostalOfficeServiceImpl service) {
+    public PostalOfficeController(PostalOfficeServiceImpl service) {
         this.service = service;
     }
 
