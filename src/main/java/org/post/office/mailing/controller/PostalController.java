@@ -2,9 +2,9 @@ package org.post.office.mailing.controller;
 
 import org.post.office.mailing.model.entity.PostalOfficeEntity;
 import org.post.office.mailing.service.PostalOfficeServiceImpl;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
@@ -18,8 +18,8 @@ public class PostalController {
         this.service = service;
     }
 
-    @GetMapping("getAll")
-    public List<PostalOfficeEntity> getAll() {
+    @GetMapping("offices")
+    public List<PostalOfficeEntity> getAllPostalOffices() {
         try {
             return service.findAllPostalOffice();
         } catch (EntityNotFoundException exception) {
@@ -27,8 +27,8 @@ public class PostalController {
         }
     }
 
-    @GetMapping("deleted")
-    public List<PostalOfficeEntity> getAllDeleted() {
+    @GetMapping("deleted/offices")
+    public List<PostalOfficeEntity> getAllDeletedPostalOffices() {
         try {
             return service.findAllPostalOfficeWhereStatusDeleted();
         } catch (EntityNotFoundException exception) {
@@ -36,28 +36,23 @@ public class PostalController {
         }
     }
 
-//    todo
-    @PostMapping("add")
-    public void add() {
-        PostalOfficeEntity postalOfficeEntity = PostalOfficeEntity.builder()
-                .postalCode("309502")
-                .name("Старый Оскол 16")
-                .address("Белгородская область, город Старый Оскол")
-                .deleted(false)
-                .build();
+    @GetMapping("office/{postalCode}")
+    public ResponseEntity<?> getPostalOfficeByPostalCode(@PathVariable("postalCode") String postalCode) {
+        ResponseEntity<?> responseEntity = service.findPostalOfficeByPostalCode(postalCode);
+        if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok().body(responseEntity.getBody());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("add/office")
+    public void addPostalOffice(@RequestBody PostalOfficeEntity postalOfficeEntity) {
         service.createPostalOffice(postalOfficeEntity);
     }
 
-//    todo
-    @GetMapping("delete")
-    public void delete() {
-        System.out.println(service.findAllPostalOffice());
-        try {
-            service.deletePostalOfficeByPostalCode("309502");
-        } catch (EntityNotFoundException exception) {
-            System.out.println(exception.getClass().getSimpleName());
-            System.out.println("Объект не найден");
-        }
-        System.out.println(service.findAllPostalOffice());
+    @GetMapping("delete/office/{postalCode}")
+    public void deletePostalOffice(@PathVariable("postalCode") String postalCode) {
+        service.deletePostalOfficeByPostalCode(postalCode);
     }
 }
