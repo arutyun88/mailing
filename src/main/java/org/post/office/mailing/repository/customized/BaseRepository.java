@@ -1,6 +1,6 @@
 package org.post.office.mailing.repository.customized;
 
-import org.post.office.mailing.model.entity.BaseEntity;
+import org.post.office.mailing.model.BaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 

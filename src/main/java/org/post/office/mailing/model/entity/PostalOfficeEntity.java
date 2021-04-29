@@ -1,6 +1,7 @@
 package org.post.office.mailing.model.entity;
 
 import lombok.*;
+import org.post.office.mailing.model.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

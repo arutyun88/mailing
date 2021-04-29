@@ -1,4 +1,4 @@
-package org.post.office.mailing.model.entity;
+package org.post.office.mailing.model;
 
 public interface BaseEntity {
     boolean getDeleted();
