@@ -2,9 +2,7 @@ package org.post.office.mailing.model.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -18,11 +16,22 @@ public class PostalItemEntity implements BaseEntity {
 
     @Id
     @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_sequence")
+    @SequenceGenerator(name = "custom_sequence", initialValue = 1000000000, allocationSize = 0)
     private long id;
+
     private boolean deleted;
-    private String postalType;
-    private String postalCode;
+
+    @Enumerated(EnumType.STRING)
+    private PostalItemType postalType;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_postal_code")
+    @NotNull
+    private PostalOfficeEntity receiverPostalCode;
+
     private String receiverAddress;
+
     private String receiverName;
 
     @Override
@@ -33,17 +42,5 @@ public class PostalItemEntity implements BaseEntity {
     @Override
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "PostalItemEntity{" +
-                "id=" + id +
-                ", deleted=" + deleted +
-                ", postalType='" + postalType + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", receiverAddress='" + receiverAddress + '\'' +
-                ", receiverName='" + receiverName + '\'' +
-                '}';
     }
 }

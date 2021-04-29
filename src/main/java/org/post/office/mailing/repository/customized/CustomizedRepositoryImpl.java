@@ -38,8 +38,9 @@ public class CustomizedRepositoryImpl implements CustomizedRepository<PostalOffi
     public ResponseEntity<?> findByIdWhereDeletedFalse(String postalCode) {
         try {
             return ResponseEntity.ok().body(entityManager.createQuery(
-                    "from PostalOfficeEntity where postalCode = postal_code and deleted = false",
+                    "from PostalOfficeEntity where postalCode = : postal_code and deleted = false",
                     PostalOfficeEntity.class)
+                    .setParameter("postal_code", postalCode)
                     .getSingleResult());
         } catch (NoResultException exception) {
             return ResponseEntity.status(400).build();

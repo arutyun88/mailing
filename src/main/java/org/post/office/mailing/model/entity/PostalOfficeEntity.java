@@ -2,10 +2,12 @@ package org.post.office.mailing.model.entity;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
@@ -17,6 +19,8 @@ import javax.validation.constraints.NotNull;
 public class PostalOfficeEntity implements BaseEntity {
 
     @Id @NotNull
+    @Pattern(regexp = "[0-9]{6}")
+    @Column(name = "postal_code", length = 6)
     private String postalCode;
     private String name;
     private String address;
@@ -30,15 +34,5 @@ public class PostalOfficeEntity implements BaseEntity {
     @Override
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
-    }
-
-    @Override
-    public String toString() {
-        return "PostalOffice{" +
-                "postalCode='" + postalCode + '\'' +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", deleted=" + deleted +
-                '}';
     }
 }
