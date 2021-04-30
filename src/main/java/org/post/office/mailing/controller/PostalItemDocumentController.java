@@ -1,12 +1,9 @@
 package org.post.office.mailing.controller;
 
 import org.post.office.mailing.model.document.PostalItemDocument;
-import org.post.office.mailing.model.entity.PostalItemEntity;
 import org.post.office.mailing.service.PostalItemDocumentServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PostalItemDocumentController {
@@ -19,5 +16,20 @@ public class PostalItemDocumentController {
     @PostMapping("create")
     public ResponseEntity<?> createDocument(@RequestBody PostalItemDocument itemDocument){
         return documentService.createDocument(itemDocument);
+    }
+
+    @PostMapping("sending/{postalItem}")
+    public ResponseEntity<?> sendingPostalItem(@PathVariable("postalItem") long postalItem) {
+        return documentService.sendingPostalItem(postalItem);
+    }
+
+    @GetMapping("status/{postalItem}")
+    public ResponseEntity<?> getStatus(@PathVariable("postalItem") long postalItem) {
+        return documentService.getPostalItemStatus(postalItem);
+    }
+
+    @PostMapping("point/{postalItem}")
+    public ResponseEntity<?> changeCurrentPoint(@PathVariable("postalItem") long postalItem) {
+        return documentService.changeCurrentPoint(postalItem);
     }
 }

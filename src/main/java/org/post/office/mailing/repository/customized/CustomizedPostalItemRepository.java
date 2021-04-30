@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface CustomizedRepository<T> {
+public interface CustomizedPostalItemRepository<T> {
     List<T> findAllWhereDeletedFalse();
     List<T> findAllWhereDeletedTrue();
-    ResponseEntity<?> findByIdWhereDeletedFalse(String id);
+    ResponseEntity<?> findByIdWhereDeletedFalse(long id);
     void delete(T entity);
 }

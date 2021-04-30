@@ -28,6 +28,9 @@ public class PostalItemDocument implements BaseEntity {
     @Column(name = "registration_date")
     private Date registrationDate;
 
+    @Column(name = "update_date")
+    private Date updateDate;
+
     @ManyToOne @NotNull @JoinColumn(name = "registration_office")
     private PostalOfficeEntity registrationOffice;
 

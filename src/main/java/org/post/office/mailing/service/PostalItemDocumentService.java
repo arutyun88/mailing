@@ -5,4 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface PostalItemDocumentService {
     ResponseEntity<?> createDocument(PostalItemDocument itemDocument);
+    ResponseEntity<?> sendingPostalItem(long postalItem);
+    ResponseEntity<?> getPostalItemStatus(long postalItem);
+    ResponseEntity<?> changeCurrentPoint(long postalItem);
 }

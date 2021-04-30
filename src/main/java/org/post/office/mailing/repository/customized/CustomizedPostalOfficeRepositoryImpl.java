@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @Repository
-public class CustomizedRepositoryImpl implements CustomizedRepository<PostalOfficeEntity> {
+public class CustomizedPostalOfficeRepositoryImpl implements CustomizedPostalOfficeRepository<PostalOfficeEntity> {
 
     @PersistenceContext
     private EntityManager entityManager;

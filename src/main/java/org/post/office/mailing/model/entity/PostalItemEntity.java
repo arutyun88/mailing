@@ -21,6 +21,7 @@ public class PostalItemEntity implements BaseEntity {
     @SequenceGenerator(name = "custom_sequence", initialValue = 1000000000, allocationSize = 0)
     private long id;
 
+    @NotNull
     private boolean deleted;
 
     @Enumerated(EnumType.STRING)
