@@ -102,14 +102,18 @@ public class PostalItemDocumentServiceImpl implements PostalItemDocumentService 
             PostalItemDocument postalDocument = documentRepository.findByPostalItem(postalItemEntity);
             if (postalDocument.getStatus().equals(PostalItemStatus.ON_ROUTE)) {
                 postalDocument.setStatus(PostalItemStatus.POINT);
+                postalDocument.setCurrentOffice(postalDocument.getDestinationOffice());
+                log.info("Postal item on route");
             } else if (postalDocument.getStatus().equals(PostalItemStatus.POINT)) {
                 postalDocument.setStatus(PostalItemStatus.COURIER);
+                log.info("Postal item on courier");
             } else if (postalDocument.getStatus().equals(PostalItemStatus.COURIER)) {
                 postalDocument.setStatus(PostalItemStatus.DELIVERED);
                 postalDocument.setDeleted(true);
                 assert postalItemEntity != null;
                 postalItemEntity.setDeleted(true);
                 itemRepository.save(postalItemEntity);
+                log.info("Postal item on delivered");
             } else {
                 log.warn("Postal item already delivered");
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -122,7 +126,6 @@ public class PostalItemDocumentServiceImpl implements PostalItemDocumentService 
                     .postalItemEntity(postalDocument.getPostalItem())
                     .postalOffice(postalDocument.getCurrentOffice())
                     .build());
-            log.info("Postal item on point");
             return ResponseEntity.ok().build();
         }
         log.warn("Postal item not found");
