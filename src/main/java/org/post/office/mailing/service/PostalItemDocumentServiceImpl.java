@@ -83,14 +83,13 @@ public class PostalItemDocumentServiceImpl implements PostalItemDocumentService 
 
     @Override
     public ResponseEntity<?> getPostalItemStatus(long postalItem) {
-        ResponseEntity<?> itemResult = itemRepository.findByIdWhereDeletedFalse(postalItem);
-        if (itemResult.getStatusCode().is2xxSuccessful()) {
-            PostalItemEntity postalItemEntity = (PostalItemEntity) itemResult.getBody();
-            PostalItemDocument postalDocument = documentRepository.findByPostalItem(postalItemEntity);
-            log.info("Status received");
+        PostalItemEntity itemResult = itemRepository.findById(postalItem).orElse(null);
+        if (itemResult != null) {
+            PostalItemDocument postalDocument = documentRepository.findByPostalItem(itemResult);
+            log.info("Status " + postalItem + " received");
             return ResponseEntity.ok().body(postalDocument.getStatus());
         }
-        log.warn("Postal item not found");
+        log.warn("Postal item " + postalItem + " not found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
@@ -103,19 +102,23 @@ public class PostalItemDocumentServiceImpl implements PostalItemDocumentService 
             if (postalDocument.getStatus().equals(PostalItemStatus.ON_ROUTE)) {
                 postalDocument.setStatus(PostalItemStatus.POINT);
                 postalDocument.setCurrentOffice(postalDocument.getDestinationOffice());
-                log.info("Postal item on route");
+                log.info("Postal item " + postalItem + " on route");
             } else if (postalDocument.getStatus().equals(PostalItemStatus.POINT)) {
                 postalDocument.setStatus(PostalItemStatus.COURIER);
-                log.info("Postal item on courier");
+                log.info("Postal item " + postalItem + " on courier");
             } else if (postalDocument.getStatus().equals(PostalItemStatus.COURIER)) {
                 postalDocument.setStatus(PostalItemStatus.DELIVERED);
                 postalDocument.setDeleted(true);
                 assert postalItemEntity != null;
                 postalItemEntity.setDeleted(true);
                 itemRepository.save(postalItemEntity);
-                log.info("Postal item on delivered");
-            } else {
-                log.warn("Postal item already delivered");
+                log.info("Postal item " + postalItem + " on delivered");
+            } else if (postalDocument.getStatus().equals(PostalItemStatus.DELIVERED)) {
+                log.warn("Postal item " + postalItem + " already delivered");
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            if (postalDocument.getStatus().equals(PostalItemStatus.REGISTERED)) {
+                log.warn("Postal item " + postalItem + " not sent");
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
             postalDocument.setUpdateDate(new Date());
@@ -128,7 +131,7 @@ public class PostalItemDocumentServiceImpl implements PostalItemDocumentService 
                     .build());
             return ResponseEntity.ok().build();
         }
-        log.warn("Postal item not found");
+        log.warn("Postal item " + postalItem + " not found");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
