@@ -38,7 +38,7 @@ public class PostalItemEntity implements BaseEntity {
 
     @Override
     public boolean getDeleted() {
-        return false;
+        return deleted;
     }
 
     @Override
